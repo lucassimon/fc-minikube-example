@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  #  não usa o IP em contrapartida usa o DNS pelo metadata mysql-service
+  clusterIP: None
+  ports:
+    - port: 3306
+  selector:
+    matchLabels:
+      app: mysql-server
+      tier: db
