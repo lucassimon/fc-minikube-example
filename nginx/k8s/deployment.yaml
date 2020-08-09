@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-nginx
+# SPEC do deplyment
+spec:
+  replicas: 3
+  #  Selector utilizado para criação do service
+  selector:
+    matchLabels:
+      app: hello-nginx
+  # configurações do POD abaixo do template
+  template:
+    # Essa metadata vai ser pod a ser criado
+    metadata:
+      # FOrma de identificar os pod que contenham certas labels
+      labels:
+        app: hello-nginx
+    # SPEC do POD
+    spec:
+      containers:
+        - name: nginx
+          image: lucassimon/nginx
+          ports:
+            - containerPort: 80
