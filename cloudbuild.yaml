@@ -1,22 +1,21 @@
 steps:
-    - id: "Test"
-      name: "gcr.io/cloud-builders/go:alpine"
-      args: ["test", "fcsum"]
-      env: ["GOPATH=."]
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    for d in */; do
+      config="${d}cloudbuild.yaml"
+      if [[ ! -f "${config}" ]]; then
+        continue
+      fi
 
-    - id: "Build"
-      name: "gcr.io/cloud-builders/go:alpine"
-      args: ["build", "-o", "build/sum", "./src/fcsum"]
-      env: ["GOPATH=."]
-
-    - id: "Create image"
-      name: "gcr.io/cloud-builders/docker"
-      args:
-          - "build"
-          - "--tag=gcr.io/$PROJECT_ID/fc-sum-golang:latest"
-          - "--tag=gcr.io/$PROJECT_ID/fc-sum-golang:1.0"
-          - "--file=Dockerfile"
-          - "."
+      echo "Building $d ... "
+      (
+        gcloud builds submit $d --config=${config}
+      ) &
+    done
+    wait
 
 images:
     - "gcr.io/$PROJECT_ID/fc-sum-golang:latest"
