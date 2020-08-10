@@ -1,7 +1,7 @@
 steps:
     - id: "Test"
       name: "gcr.io/cloud-builders/go:alpine"
-      args: ["test", "fcsum"]
+      args: ["test", "fcgreetings"]
       env: ["GOPATH=."]
 
     - id: "Build"
