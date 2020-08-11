@@ -1,23 +1,28 @@
 steps:
-    - id: "Test"
-      name: "gcr.io/cloud-builders/go:alpine"
-      args: ["test", "fcgreetings"]
-      env: ["GOPATH=."]
+  - id: "Install packages"
+    name: "gcr.io/cloud-builders/go:alpine"
+    args: ["mod", "download"]
+    env: ["GOPATH=./apps"]
 
-    - id: "Build"
-      name: "gcr.io/cloud-builders/go:alpine"
-      args: ["build", "-o", "build/greetings", "./src/fcgreetings"]
-      env: ["GOPATH=."]
+  - id: "Test"
+    name: "gcr.io/cloud-builders/go:alpine"
+    args: ["test", "fcgreetings"]
+    env: ["GOPATH=./apps"]
 
-    - id: "Create image"
-      name: "gcr.io/cloud-builders/docker"
-      args:
-          - "build"
-          - "--tag=gcr.io/$PROJECT_ID/fc-greetings-golang:latest"
-          - "--tag=gcr.io/$PROJECT_ID/fc-greetings-golang:1.0"
-          - "--file=Dockerfile"
-          - "."
+  - id: "Build"
+    name: "gcr.io/cloud-builders/go:alpine"
+    args: ["build", "-o", "build/greetings", "./src/fcgreetings"]
+    env: ["GOPATH=./apps"]
+
+  - id: "Create image"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "--tag=gcr.io/$PROJECT_ID/fc-greetings-golang:latest"
+      - "--tag=gcr.io/$PROJECT_ID/fc-greetings-golang:1.0"
+      - "--file=/apps/Dockerfile"
+      - "."
 
 images:
-    - "gcr.io/$PROJECT_ID/fc-greetings-golang:latest"
-    - "gcr.io/$PROJECT_ID/fc-greetings-golang:1.0"
+  - "gcr.io/$PROJECT_ID/fc-greetings-golang:latest"
+  - "gcr.io/$PROJECT_ID/fc-greetings-golang:1.0"
